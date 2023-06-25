@@ -329,3 +329,84 @@ Yukarıdaki kodun koşulunda bir veri dizisi belirttik, NOT IN diyerek de replac
 
 
 
+## LIKE ve ILIKE Clause(Tümce) Kullanımı
+
+
+
+LIKE operatörü wildcard'lar (Joker Karakterler) ile belirtilen pattern'e (Desen, Örüntü) sahip verileri bulmak için kullanılır. Eğer belirtilen ifadeye sahip bir veri bulunursa, LIKE operatörü geriye true yani 1 döndürür.
+
+İki tip wildcard (Joker Karakter) bulunmaktadır.
+
+- Percent Sign (Yüzde Simgesi) "%"
+- Underscore (Alt Çizgi) "_"
+
+Percent Sign (Yüzde simgesi) 0, 1 veya daha fazla sayıda karakteri temsil eder. Underscore (Alt Çizgi) karakteri ise bir adet numara ya da karakteri temsil eder.
+
+LIKE clause ile birlikte bu wildcardlar kullanılmaz ise LIKE operatörü equals (Eşittir) operatörü gibi davranır.
+
+Örnek bir sorgu:
+
+```sql
+SELECT *
+FROM customer
+WHERE first_name = 'John';
+```
+
+Yukarıdaki komut customer tablosunda adı John olan tüm kayıtları çeker. Aynı işlemi LIKE operatörü kullanarak da yapabiliriz : 
+
+```sql
+SELECT *
+FROM customer
+WHERE first_name LIKE 'John';
+```
+
+Yukarıdaki LIKE tümcesinin kullanımında wildcard kullanmadığımız için LIKE tümcesi equals operatörü görevi görmüştür.
+
+**Wildcard kullanım örnekleri:**
+
+```sql
+SELECT * FROM customer
+WHERE first_name LIKE 'J%';
+```
+
+Yukarıdaki örnekte adı J ile başlayan kayıtlara eriştik. LIKE operatörü büyük küçük harfe duyarlıdır. Eğer ki küçük j ile başlayan kayıtları da görmek istiyorsak, yani case sensitive olmasın istiyorsak ILIKE kullanırız. Ek olarak J ile başlayan ve devamında 0, 1 ya da daha çok karakter olan kayıtlara eriştik, yani adı sadece J olan bir kayıt da bu noktada erişilebilirdi.
+
+```sql
+SELECT * FROM customer
+WHERE first_name LIKE '%y';
+```
+
+Yukarıdaki örnekte adı y ile biten kayıtlara erişim sağlanır. Öncesinde kaç adet karakter olduğunun  bir önemi yoktur. Eğer ilgili sütunda "y" verisi varsa dahi getirecektir. 
+
+```sql
+SELECT * FROM customer
+WHERE address_id::text LIKE '%4';
+```
+
+Yukarıdaki örnek önemli bir örnektir. LIKE clause String (Metinsel) karşılaştırmaları yapabilir, address_id alanımız ise integer bir alandır. Bu sebeple explicitly cast (Açıkça yapılan tür dönüşümü) işlemi yaparak ilgili alanı text'e çevirip öyle LIKE kullanıyoruz. Dolayısıyla yukarıdaki örnek address_id alanında 4 olan veya 4 ile biten kayıtları getirir.
+
+```sql
+SELECT * FROM customer
+WHERE address_id::text LIKE '1_4';
+```
+
+Yukarıdaki örnek Percent Sign yerine Underscore içermektedir. Underscore bir karakter ya da sayıyı temsil eder. Yukarıdaki LIKE ifadesi 1 ile başlayan ardından herhangi bir karakter gelen ve son olarak 4 ile biten 3 karakter uzunluğunda veriyi temsil eder. Dolayısıyla 104-114 gibi veriler bu koşulu sağlarken 1004 gibi 3 karakterden uzun ya da 14 gibi 3 karakterden kısa veriler bu koşulu sağlamayacaktır.
+
+```sql
+SELECT * FROM customer
+WHERE first_name LIKE 'M_h_m%et'; 
+```
+
+Yukarıdaki örnekte her iki wildcard birlikte kullanılmıştır.
+
+"M" ile başlayan bir karakter ve sonrasında "h" olan ardından yine bir karakter ve sonrasında "m" olan ve "et" ile biten first_name verisini bulur. Bu durumda "Muhammet" verisi buna iyi bir örnektir. Fakat "muhammet verisi" bu ifadedeki koşulu sağlamayacaktır. Çünkü LIKE tümcesi büyük küçük harfe duyarlıdır ve başlangıcın "M" ile olması gerektiğini bildirdik. Bunu büyük küçük duyarsız hale getirmek için LIKE yerine ILIKE kullanmak yeterli olacaktır.
+
+```sql
+SELECT * FROM customer
+WHERE first_name ILIKE 'M_h_m%et';
+```
+
+
+
+
+
