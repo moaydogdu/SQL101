@@ -262,7 +262,7 @@ Yukarıdaki kod film tablosunda rental_rate değeri 4.99 veya 2.99 olmayan veril
 
 
 
-## BETWEEN Kullanımı
+## BETWEEN AND Kullanımı
 
 Aşağıda bir örnek verilmiştir. Bunun üzerinden anlatalım.
 
@@ -296,4 +296,36 @@ AND
 ```
 
 Yukarıdaki kodda film tablosundan rental_rate ve replacement_cost sütunlarını çektik. Koşul ise rental_rate değerinin 2 ile 4 arasında olması ve replacement_cost alanının 10 ile 20 arasında olması.
+
+## IN Kullanımı
+
+Diyelim ki uzunluğu 40 veya 50 veya 60 olan filmlere erişmek istiyoruz. Normal şartlarda WHERE kullanarak bunu aşağıdaki gibi yazarız:
+
+```sql
+SELECT *
+FROM film
+WHERE length = 40 OR length = 50 OR length = 60;
+```
+
+Yapılmak istenen 40,50 ve 60 değerlerine sahip filmlere erişmekti. Yani 40,50,60 burada bir dizi, koleksiyon görevi görmekte.
+
+IN kullanarak şunu diyebilirdik, şunun içerisindeki (in) değerlere sahip kayıtları getir.
+
+```sql
+SELECT *
+FROM film
+WHERE length IN (40,50,60);
+```
+
+Bir başka örnek:
+
+```sql
+SELECT *
+FROM film
+WHERE replacement_cost NOT IN (10.99, 12.99, 16.99);
+```
+
+Yukarıdaki kodun koşulunda bir veri dizisi belirttik, NOT IN diyerek de replacement_cost değeri bu dizi içerisinde bulunmayan verileri getir demiş olduk.
+
+
 
