@@ -262,5 +262,38 @@ Yukarıdaki kod film tablosunda rental_rate değeri 4.99 veya 2.99 olmayan veril
 
 
 
+## BETWEEN Kullanımı
 
+Aşağıda bir örnek verilmiştir. Bunun üzerinden anlatalım.
+
+```sql
+SELECT *
+FROM film
+WHERE length>90 AND length<120
+```
+
+Yukarıdaki kodda WHERE ile bir koşul belirttik. Koşulda length alanının değerinin 90'dan büyük ve 120'den küçük olması gerektiğini söyledik.
+
+Bu koşulu BETWEEN operatörü kullanarak da yazabiliriz.
+
+```sql
+SELECT *
+FROM film
+WHERE length BETWEEN 90 AND 120
+```
+
+WHERE satırında length üzerinde çalıştığımızı belirttikten sonra BETWEEN kullanarak 90 ve 120 arasında olduğunu belirttik.
+
+Örneği biraz karmaşık hale getirelim:
+
+```sql
+SELECT rental_rate, replacement_cost
+FROM film
+WHERE
+(rental_rate BETWEEN 2 AND 4) 
+AND
+(replacement_cost BETWEEN 10 AND 20);
+```
+
+Yukarıdaki kodda film tablosundan rental_rate ve replacement_cost sütunlarını çektik. Koşul ise rental_rate değerinin 2 ile 4 arasında olması ve replacement_cost alanının 10 ile 20 arasında olması.
 
